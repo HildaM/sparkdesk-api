@@ -1,16 +1,31 @@
-# 这是一个示例 Python 脚本。
-
-# 按 ⌃R 执行或将其替换为您的代码。
-# 按 双击 ⇧ 在所有地方搜索类、文件、工具窗口、操作和设置。
+from sparkdesk_api.core import SparkAPI
 
 
-def print_hi(name):
-    # 在下面的代码行中使用断点来调试脚本。
-    print(f'Hi, {name}')  # 按 ⌘F8 切换断点。
+def get_resp_by_api():
+    # Set your API Infomation here
+    APP_ID = ""
+    APISecret = ""
+    APIKey = ""
+    # ------------------------
+    spark = SparkAPI(
+        app_id=APP_ID,
+        api_key=APIKey,
+        api_secret=APISecret,
+    )
+
+    # continuously chatting
+    history = []
+    while True:
+        question1 = input("Ask Question: ")
+        if question1 == "exit" or question1 == "stop":
+            break
+        for resp, history in spark.chat_stream(question1, history):
+            # End with a null character to achieve the effect of continuous output.
+            print("\rAI: ", resp, end="")
+            # print("\rHistory: ", history, end="")
+        print("")
 
 
-# 按间距中的绿色按钮以运行脚本。
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
+    # Use SparkDesk API
+    get_resp_by_api()

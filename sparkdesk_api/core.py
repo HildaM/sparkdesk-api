@@ -16,19 +16,23 @@ from websocket import create_connection, WebSocketConnectionClosedException
 
 
 class SparkAPI:
-    api_url = 'ws(s)://spark-api.xf-yun.com/v1.1/chat'
+    api_url = 'wss://spark-api.xf-yun.com/v1.1/chat'
     max_token = 2048
 
-    def __init__(self, app_id, api_key, api_secret, max_token):
+    def __init__(self, app_id, api_key, api_secret):
         self.app_id = app_id
         self.api_key = api_key
         self.api_secret = api_secret
-        self.max_token = max_token
+
+    def set_max_tokens(self, token):
+        if isinstance(token, int) is False or token < 0:
+            print("set_max_tokens() error: tokens should be a positive integer!")
+            return
+        self.max_token = token
 
     """
     doc url: https://www.xfyun.cn/doc/spark/general_url_authentication.html
     """
-
     def get_authorization_url(self):
         authorize_url = urlparse(self.api_url)
         # 1. generate data
@@ -93,10 +97,19 @@ class SparkAPI:
     @staticmethod
     def get_prompt(query: str, history: list):
         use_message = {"role": "user", "content": query}
+        if history is None:
+            history = []
         history.append(use_message)
         message = {"text": history}
         return message
 
+    """
+    param reference:
+        status:
+            Text response status, with values of [0, 1, 2]; 
+            0 represents the first text result, 1 represents intermediate text results, and 2 represents the last text result.
+        
+    """
     @staticmethod
     def process_response(response_str: str, history: list):
         res_dict: dict = json.loads(response_str)
@@ -108,6 +121,7 @@ class SparkAPI:
             res_content = res_dict.get("content", "")
 
             if len(res_dict) > 0 and len(res_content) > 0:
+                # Ignore the unnecessary data
                 if "index" in res_dict:
                     del res_dict["index"]
                 response = res_content
@@ -115,7 +129,6 @@ class SparkAPI:
                 if status == 0:
                     history.append(res_dict)
                 else:
-                    # In continuous result generation, add the newly returned content to the response.
                     history[-1]["content"] += response
                     response = history[-1]["content"]
 
@@ -128,15 +141,20 @@ class SparkAPI:
             print("https://www.xfyun.cn/doc/spark/%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E.html")
             return "", history, status
 
+
+    # Stream output statement, used for terminal chat.
     def chat_stream(
             self,
             query: str,
-            history: list,
+            history: list = None,   # store the conversation history
             user_id: str = "001",
             domain: str = "general",
             max_tokens: int = 2048,
             temperature: float = 0.5,
     ):
+        if history is None:
+            history = []
+
         # the max of max_length is 4096
         max_tokens = min(max_tokens, 4096)
         url = self.get_authorization_url()

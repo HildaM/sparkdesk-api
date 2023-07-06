@@ -17,26 +17,26 @@ from sparkdesk_api.utils import get_prompt, process_response
 
 
 class SparkAPI:
-    api_url = 'wss://spark-api.xf-yun.com/v1.1/chat'
-    max_token = 2048
+    __api_url = 'wss://spark-api.xf-yun.com/v1.1/chat'
+    __max_token = 2048
 
     def __init__(self, app_id, api_key, api_secret):
-        self.app_id = app_id
-        self.api_key = api_key
-        self.api_secret = api_secret
+        self.__app_id = app_id
+        self.__api_key= api_key
+        self.__api_secret = api_secret
 
-    def set_max_tokens(self, token):
+    def __set_max_tokens(self, token):
         if isinstance(token, int) is False or token < 0:
             print("set_max_tokens() error: tokens should be a positive integer!")
             return
-        self.max_token = token
+        self.__max_token = token
 
     """
     doc url: https://www.xfyun.cn/doc/spark/general_url_authentication.html
     """
 
-    def get_authorization_url(self):
-        authorize_url = urlparse(self.api_url)
+    def __get_authorization_url(self):
+        authorize_url = urlparse(self.__api_url)
         # 1. generate data
         date = datetime.now(timezone.utc).strftime('%a, %d %b %Y %H:%M:%S %Z')
 
@@ -51,14 +51,14 @@ class SparkAPI:
         )
         signature = base64.b64encode(
             hmac.new(
-                self.api_secret.encode(),
+                self.__api_secret.encode(),
                 signature_origin.encode(),
                 digestmod='sha256'
             ).digest()
         ).decode()
         authorization_origin = \
             'api_key="{}",algorithm="{}",headers="{}",signature="{}"'.format(
-                self.api_key, "hmac-sha256", "host date request-line", signature
+                self.__api_key, "hmac-sha256", "host date request-line", signature
             )
         authorization = base64.b64encode(authorization_origin.encode()).decode()
         params = {
@@ -67,10 +67,10 @@ class SparkAPI:
             "host": authorize_url.netloc
         }
 
-        ws_url = self.api_url + "?" + urlencode(params)
+        ws_url = self.__api_url + "?" + urlencode(params)
         return ws_url
 
-    def build_inputs(
+    def __build_inputs(
             self,
             message: dict,
             user_id: str = "001",
@@ -80,7 +80,7 @@ class SparkAPI:
     ):
         input_dict = {
             "header": {
-                "app_id": self.app_id,
+                "app_id": self.__app_id,
                 "uid": user_id,
             },
             "parameter": {
@@ -110,10 +110,10 @@ class SparkAPI:
 
         # the max of max_length is 4096
         max_tokens = min(max_tokens, 4096)
-        url = self.get_authorization_url()
+        url = self.__get_authorization_url()
         ws = create_connection(url)
         message = get_prompt(query, history)
-        input_str = self.build_inputs(
+        input_str = self.__build_inputs(
             message=message,
             user_id=user_id,
             domain=domain,
@@ -140,7 +140,7 @@ class SparkAPI:
             ws.close()
 
     # Stream output statement, used for terminal chat.
-    def chat_stream(
+    def __streaming_output(
             self,
             query: str,
             history: list = None,  # store the conversation history
@@ -154,11 +154,11 @@ class SparkAPI:
 
         # the max of max_length is 4096
         max_tokens = min(max_tokens, 4096)
-        url = self.get_authorization_url()
+        url = self.__get_authorization_url()
         ws = create_connection(url)
 
         message = get_prompt(query, history)
-        input_str = self.build_inputs(
+        input_str = self.__build_inputs(
             message=message,
             user_id=user_id,
             domain=domain,
@@ -183,3 +183,17 @@ class SparkAPI:
             print("Connection closed")
         finally:
             ws.close()
+
+    def chat_stream(self):
+        history = []
+        print("Enter exit or stop to end the converation.\n")
+        try:
+            while True:
+                query = input("Ask: ")
+                if query == "exit" or query == "stop":
+                    break
+                for response, _ in self.__streaming_output(query, history):
+                    print("\r" + response, end="")
+                print("\n")
+        finally:
+            print("\nThank you for using the SparkDesk AI. Welcome to use it again!")

@@ -13,6 +13,7 @@ import json
 from datetime import datetime, timezone
 from urllib.parse import urlencode, urlparse
 from websocket import create_connection, WebSocketConnectionClosedException
+from sparkdesk_api.utils import get_prompt, process_response
 
 
 class SparkAPI:
@@ -33,6 +34,7 @@ class SparkAPI:
     """
     doc url: https://www.xfyun.cn/doc/spark/general_url_authentication.html
     """
+
     def get_authorization_url(self):
         authorize_url = urlparse(self.api_url)
         # 1. generate data
@@ -94,59 +96,54 @@ class SparkAPI:
         }
         return json.dumps(input_dict)
 
-    @staticmethod
-    def get_prompt(query: str, history: list):
-        use_message = {"role": "user", "content": query}
+    def chat(
+            self,
+            query: str,
+            history: list = None,  # store the conversation history
+            user_id: str = "001",
+            domain: str = "general",
+            max_tokens: int = 2048,
+            temperature: float = 0.5,
+    ):
         if history is None:
             history = []
-        history.append(use_message)
-        message = {"text": history}
-        return message
 
-    """
-    param reference:
-        status:
-            Text response status, with values of [0, 1, 2]; 
-            0 represents the first text result, 1 represents intermediate text results, and 2 represents the last text result.
-        
-    """
-    @staticmethod
-    def process_response(response_str: str, history: list):
-        res_dict: dict = json.loads(response_str)
-        code = res_dict.get("header", {}).get("code")
-        status = res_dict.get("header", {}).get("status", 2)
+        # the max of max_length is 4096
+        max_tokens = min(max_tokens, 4096)
+        url = self.get_authorization_url()
+        ws = create_connection(url)
+        message = get_prompt(query, history)
+        input_str = self.build_inputs(
+            message=message,
+            user_id=user_id,
+            domain=domain,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+        ws.send(input_str)
+        response_str = ws.recv()
+        try:
+            while True:
+                response, history, status = process_response(response_str, history)
+                """
+                The final return result, which means a complete conversation.
+                doc url: https://www.xfyun.cn/doc/spark/Web.html#_1-%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E
+                """
+                if len(response) == 0 or status == 2:
+                    break
+                response_str = ws.recv()
+            return response
 
-        if code == 0:
-            res_dict = res_dict.get("payload", {}).get("choices", {}).get("text", [{}])[0]
-            res_content = res_dict.get("content", "")
-
-            if len(res_dict) > 0 and len(res_content) > 0:
-                # Ignore the unnecessary data
-                if "index" in res_dict:
-                    del res_dict["index"]
-                response = res_content
-
-                if status == 0:
-                    history.append(res_dict)
-                else:
-                    history[-1]["content"] += response
-                    response = history[-1]["content"]
-
-                return response, history, status
-            else:
-                return "", history, status
-        else:
-            print("error code ", code)
-            print("you can see this website to know code detail")
-            print("https://www.xfyun.cn/doc/spark/%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E.html")
-            return "", history, status
-
+        except WebSocketConnectionClosedException:
+            print("Connection closed")
+        finally:
+            ws.close()
 
     # Stream output statement, used for terminal chat.
     def chat_stream(
             self,
             query: str,
-            history: list = None,   # store the conversation history
+            history: list = None,  # store the conversation history
             user_id: str = "001",
             domain: str = "general",
             max_tokens: int = 2048,
@@ -160,7 +157,7 @@ class SparkAPI:
         url = self.get_authorization_url()
         ws = create_connection(url)
 
-        message = self.get_prompt(query, history)
+        message = get_prompt(query, history)
         input_str = self.build_inputs(
             message=message,
             user_id=user_id,
@@ -176,15 +173,8 @@ class SparkAPI:
         # Continuous conversation
         try:
             while True:
-                response, history, status = self.process_response(
-                    response_str, history
-                )
+                response, history, status = process_response(response_str, history)
                 yield response, history
-
-                """
-                The final return result, which means a complete conversation.
-                doc url: https://www.xfyun.cn/doc/spark/Web.html#_1-%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E
-                """
                 if len(response) == 0 or status == 2:
                     break
                 response_str = ws.recv()

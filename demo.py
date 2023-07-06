@@ -1,31 +1,41 @@
 from sparkdesk_api.core import SparkAPI
+from sparkdesk_web import web
+from sparkdesk_web.core import SparkWeb
 
-APP_ID = ""
-APISecret = ""
-APIKey = ""
+sparkAPI = SparkAPI(
+    app_id="",
+    api_key="",
+    api_secret="",
+)
 
-spark = SparkAPI(
-    app_id=APP_ID,
-    api_key=APIKey,
-    api_secret=APISecret,
+
+
+sparkWeb = SparkWeb(
+    cookie="",
+    fd="",
+    GtToken=""
 )
 
 
 def get_resp_by_api():
     question = input("User: ")
-    print("\nAI: ", spark.chat(question))
+    print("\nAI: ", sparkAPI.chat(question))
 
 
-def chatting():
+def api_chatting():
     history = []
     print("Enter exit or stop to end the converation.\n")
     while True:
         query = input("User: ")
         if query == "exit" or query == "stop":
             break
-        for response1, history1 in spark.chat_stream(query, history):
+        for response1, history1 in sparkAPI.chat_stream(query, history):
             print("\rAI: ", response1, end="")
         print("")
+
+
+def web_chatting():
+    sparkWeb.chat_stream()
 
 
 if __name__ == '__main__':
@@ -33,4 +43,8 @@ if __name__ == '__main__':
     # get_resp_by_api()
 
     # terminal chatting
-    chatting()
+    # api_chatting()
+    # ----------------------------
+
+    # Use SparkDesk Web
+    sparkWeb.chat_stream()

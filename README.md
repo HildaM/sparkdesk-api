@@ -1,9 +1,7 @@
 # sparkdesk-api 讯飞星火大模型api
 > 如果该项目对你有帮助，不要忘记给我点个 star 哦！
 ## 使用方法
-```shell
-pip install git+https://github.com/HildaM/sparkdesk-api
-```
+目前仅支持下载下来使用，暂不支持直接使用pip安装，后续将其上传到pypi后才可以 pip install
 
 ### 1. Web模式
 Web模式下，需要前往讯飞星火大模型web端通过 F12 抓取 3 个参数：cookie、fd、GtToken

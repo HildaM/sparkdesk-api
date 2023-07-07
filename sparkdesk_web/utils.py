@@ -21,7 +21,7 @@ def decode(text):
         return ''
 
 
-def load_session_log():
+def load_log():
     try:
         with open(log_file_name, "r", encoding='utf-8') as f:
             log_data = json.load(f)
@@ -31,7 +31,7 @@ def load_session_log():
         return False, ""
 
 
-def save_session_log(chat_id):
+def save_log(chat_id):
     session_log = {"chat_id": chat_id}
     with open(log_file_name, "w", encoding='utf-8') as f:
         json.dump(session_log, f, ensure_ascii=False, indent=4)

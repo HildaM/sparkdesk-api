@@ -12,7 +12,7 @@ import sys
 
 import requests
 
-from sparkdesk_web.utils import decode, load_session_log, save_session_log
+from sparkdesk_web.utils import decode
 from sparkdesk_web.web import create_chat_header, create_request_header
 
 

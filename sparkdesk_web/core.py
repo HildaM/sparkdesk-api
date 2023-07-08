@@ -15,6 +15,7 @@ import requests
 from sparkdesk_web.utils import decode
 from sparkdesk_web.web import create_chat_header, create_request_header
 
+NEW_CHAT = "SparkDesk AI chat"
 
 class SparkWeb:
     __cookie = ""
@@ -42,17 +43,22 @@ class SparkWeb:
         else:
             return '0'
 
-    def __set_name(self, question):
+    def __set_name(self, chat_name):
         url = "https://xinghuo.xfyun.cn/iflygpt/u/chat-list/v1/rename-chat-list"
-        question = question[:15]
+        chat_list_name = chat_name[:15]
         payload = {
             'chatListId': self.__chat_id,
-            'chatListName': question,
+            'chatListName': chat_list_name,
         }
         response = requests.request("POST", url, headers=self.__request_header, data=json.dumps(payload))
         response_data = json.loads(response.text)
         if response_data['code'] != 0:
-            print('\nFailed to initialize session name.')
+            print('\nERROR: Failed to initialize session name. Please reset Cookie, fd and GtToken')
+            exit(-1)
+
+    def __create_chat(self, chat_name):
+        self.__chat_id = self.__generate_chat_id()
+        self.__set_name(chat_name)
 
     def __get_resp(self, question):
         url = "https://xinghuo.xfyun.cn/iflygpt-chat/u/chat_message/chat"
@@ -66,9 +72,9 @@ class SparkWeb:
         response = requests.request("POST", url, headers=self.__cha_header, data=payload, stream=True)
         return response
 
+
     def chat(self, question):
-        self.__chat_id = self.__generate_chat_id()
-        self.__set_name("SparkDesk AI chat")
+        self.__create_chat(NEW_CHAT)
 
         response = self.__get_resp(question)
         response_text = ''
@@ -99,12 +105,14 @@ class SparkWeb:
                     answer = decode(encoded_data).replace('\n\n', '\n')
                     response_text += answer
                     print(answer, end="")
+        if response_text is None:
+            return False
         print("\n")
+        return True
 
     def chat_stream(self):
         try:
-            self.__chat_id = self.__generate_chat_id()
-            self.__set_name("SparkDesk AI chat")
+            self.__create_chat(NEW_CHAT)
             print("Enter exit or stop to end the converation.\n")
             count = 0
             while True:
@@ -112,8 +120,9 @@ class SparkWeb:
                 question = input("Ask: ")
                 if question == 'exit' or question == 'stop':
                     break
-                self.__streaming_output(question)
+                # If False, regenerate the chat
+                if self.__streaming_output(question) is False:
+                    print("WARRNING: 可能触发敏感词监控，对话已被重置，请前往Web页面更新Cookie、fd、GtToken！")
 
         finally:
             print("\nThank you for using the SparkDesk AI. Welcome to use it again!")
-

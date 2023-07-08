@@ -7,3 +7,5 @@
 @Date    : 2023/7/6 19:46
 @Description : 
 """
+
+name = "sparkdesk_api"

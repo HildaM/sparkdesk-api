@@ -7,7 +7,7 @@ pip install sparkdesk-api==1.0.1
 
 ### 1. Web模式
 Web模式下，需要前往讯飞星火大模型web端通过 F12 抓取 3 个参数：cookie、fd、GtToken
-- [获取参数的方法]()
+- [获取参数的方法](https://github.com/HildaM/sparkdesk-api/tree/main/docs)
 
 #### 命令行操作
 ```shell

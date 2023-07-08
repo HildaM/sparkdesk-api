@@ -22,6 +22,8 @@ python sparkdesk_web_cli.py
 - chat()：一次询问
 - chat_stream()：连续询问，相当于命令行模式
 ```python
+from sparkdesk_web.core import SparkWeb
+
 sparkWeb = SparkWeb(
      cookie=cookie,
      fd=fd,
@@ -40,5 +42,14 @@ sparkWeb = SparkWeb(
 一般使用公司邮箱申请速度快。
 
 该模式需要 3 个参数：app_id、api_key、api_secret
+```python
+from sparkdesk_api.core import SparkAPI
+sparkAPI = SparkAPI(
+    app_id="",
+    api_secret="",
+    api_key=""
+)
+sparkAPI.chat_stream()
+```
 
 具体调用方法与相关调用函数与 Web 模式一致。

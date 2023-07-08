@@ -4,6 +4,10 @@
 ```shell
 pip install sparkdesk-api==1.0.3
 ```
+或者
+```shell
+pip install sparkdesk-api==1.0.3 -i https://pypi.org/simple
+```
 
 ### 1. Web模式
 Web模式下，需要前往讯飞星火大模型web端通过 F12 抓取 3 个参数：cookie、fd、GtToken

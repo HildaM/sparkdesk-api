@@ -8,20 +8,19 @@
 @Description : 
 """
 from sparkdesk_web.core import SparkWeb
+from pyhandytools.file import FileUtils
 
 if __name__ == '__main__':
-    cookie = input("cookie: ")
-    fd = input("fd: ")
-    GtToken = input("GtToken: ")
+    conf_data = FileUtils.load_json('./conf/keys.json')
 
     sparkWeb = SparkWeb(
-        cookie=cookie,
-        fd=fd,
-        GtToken=GtToken
+        cookie=conf_data['Cookie'],
+        fd=conf_data['fd'],
+        GtToken=conf_data['GtToken']
     )
 
     # single chat
     # print(sparkWeb.chat("repeat: hello world"))
 
     # continue chat
-    sparkWeb.chat_stream()
+    sparkWeb.chat_stream(history=True)

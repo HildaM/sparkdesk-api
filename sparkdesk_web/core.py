@@ -8,14 +8,16 @@
 @Description : web接口核心入口
 """
 import json
+import os
 import sys
-
+from datetime import datetime
 import requests
-
+from pyhandytools.file import FileUtils
 from sparkdesk_web.utils import decode
 from sparkdesk_web.web import create_chat_header, create_request_header
 
 NEW_CHAT = "SparkDesk AI chat"
+
 
 class SparkWeb:
     __cookie = ""
@@ -24,6 +26,7 @@ class SparkWeb:
     __chat_id = ""
     __chat_header = ""
     __request_header = ""
+    __chat_history = list()
 
     def __init__(self, cookie, fd, GtToken):
         self.__cookie = cookie
@@ -72,7 +75,6 @@ class SparkWeb:
         response = requests.request("POST", url, headers=self.__cha_header, data=payload, stream=True)
         return response
 
-
     def chat(self, question):
         self.__create_chat(NEW_CHAT)
 
@@ -106,23 +108,35 @@ class SparkWeb:
                     response_text += answer
                     print(answer, end="")
         if response_text is None:
-            return False
+            return '', False
         print("\n")
-        return True
+        return response_text, True
 
-    def chat_stream(self):
+    def chat_stream(self, history: bool = False, history_path: str = './data/'):
+        history_file_path = ''
+        if history:
+            FileUtils.check_dir_path(history_path)
+            history_file_path = os.path.join(history_path, f'history_{str(datetime.now())}.json')
         try:
             self.__create_chat(NEW_CHAT)
-            print("Enter exit or stop to end the converation.\n")
+            print("Enter exit or stop to end the conversation.\n")
             count = 0
             while True:
                 count += 1
                 question = input("Ask: ")
                 if question == 'exit' or question == 'stop':
                     break
+                resp = self.__streaming_output(question)
                 # If False, regenerate the chat
-                if self.__streaming_output(question) is False:
-                    print("WARRNING: 可能触发敏感词监控，对话已被重置，请前往Web页面更新Cookie、fd、GtToken！")
-
+                if resp[1] is False:
+                    print("WARNING: 可能触发敏感词监控，对话已被重置，请前往Web页面更新Cookie、fd、GtToken！")
+                if history:
+                    self.__chat_history.append({
+                        'time': str(datetime.now()),
+                        'question': question,
+                        'answer': resp[0] if resp[0] else '触发敏感词监控'
+                    })
         finally:
+            if history:
+                FileUtils.write2json(history_file_path, self.__chat_history)
             print("\nThank you for using the SparkDesk AI. Welcome to use it again!")

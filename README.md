@@ -55,8 +55,11 @@ sparkAPI.chat_stream()
 具体调用方法与相关调用函数与 Web 模式一致。
 
 # 🤝贡献
+
 ## 🎉鸣谢
+
 感谢以下开发者对该项目做出的贡献：
+
 <a href="https://github.com/HildaM/sparkdesk-api/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=HildaM/sparkdesk-api" />
 </a>

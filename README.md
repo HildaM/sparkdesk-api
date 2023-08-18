@@ -2,7 +2,7 @@
 > 如果该项目对你有帮助，不要忘记给我点个 star 哦！
 ## 使用方法
 ```shell
-pip install sparkdesk-api==1.0.3
+pip install sparkdesk-api==1.1.0
 ```
 或者
 ```shell

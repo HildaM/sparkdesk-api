@@ -28,27 +28,23 @@ class SparkWeb:
     __request_header = ""
     __chat_history = list()
 
-    def __init__(self, cookie, fd, GtToken, ChatID=""):
+    def __init__(self, cookie, fd, GtToken):
         self.__cookie = cookie
         self.__fd = fd
         self.__GtToken = GtToken
         self.__cha_header = create_chat_header(cookie)
         self.__request_header = create_request_header(cookie)
-        self.__chat_id = ChatID
 
     def __generate_chat_id(self):
-        if self.__chat_id == "":
-            url = 'https://xinghuo.xfyun.cn/iflygpt/u/chat-list/v1/create-chat-list'
-            payload = "{}"
-            response = requests.request("POST", url, headers=self.__request_header, data=payload)
-            response_data = json.loads(response.text)
-            if response_data['code'] == 0:
-                chat_list_id = response_data['data']['id']
-                return chat_list_id
-            else:
-                return '0'
+        url = 'https://xinghuo.xfyun.cn/iflygpt/u/chat-list/v1/create-chat-list'
+        payload = "{}"
+        response = requests.request("POST", url, headers=self.__request_header, data=payload)
+        response_data = json.loads(response.text)
+        if response_data['code'] == 0:
+            chat_list_id = response_data['data']['id']
+            return chat_list_id
         else:
-            return self.__chat_id
+            return '0'
 
     def __set_name(self, chat_name):
         url = "https://xinghuo.xfyun.cn/iflygpt/u/chat-list/v1/rename-chat-list"

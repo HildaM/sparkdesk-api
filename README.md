@@ -6,7 +6,7 @@ pip install sparkdesk-api==1.0.3
 ```
 或者
 ```shell
-pip install sparkdesk-api==1.0.3 -i https://pypi.org/simple
+pip install sparkdesk-api==1.1.0 -i https://pypi.org/simple
 ```
 
 ### 1. Web模式

@@ -14,10 +14,12 @@ if __name__ == '__main__':
     api_secret = input("api_secret: ")
     api_key = input("api_key: ")
 
+    # 默认api接口版本为1.5，2.0需要自行申请。开启v2.0版本只需指定 version=2.1 即可
     sparkAPI = SparkAPI(
         app_id=app_id,
         api_secret=api_secret,
-        api_key=api_key
+        api_key=api_key,
+        version=2.1
     )
 
     # single chat

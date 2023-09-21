@@ -17,13 +17,19 @@ from sparkdesk_api.utils import get_prompt, process_response
 
 
 class SparkAPI:
-    __api_url = 'wss://spark-api.xf-yun.com/v1.1/chat'
+    __api_url = 'wss://spark-api.xf-yun.com/v1.1/chat'  # 默认为1.1版本
+    __domain = 'general'
     __max_token = 2048
 
-    def __init__(self, app_id, api_key, api_secret):
+    def __init__(self, app_id, api_key, api_secret, version=1.1):
         self.__app_id = app_id
-        self.__api_key= api_key
+        self.__api_key = api_key
         self.__api_secret = api_secret
+
+        # 讯飞v2.0
+        if version == 2.1:
+            self.__api_url = 'wss://spark-api.xf-yun.com/v2.1/chat'
+            self.__domain = 'generalv2'
 
     def __set_max_tokens(self, token):
         if isinstance(token, int) is False or token < 0:
@@ -74,7 +80,6 @@ class SparkAPI:
             self,
             message: dict,
             user_id: str = "001",
-            domain: str = "general",
             temperature: float = 0.5,
             max_tokens: int = 2048
     ):
@@ -85,7 +90,7 @@ class SparkAPI:
             },
             "parameter": {
                 "chat": {
-                    "domain": domain,
+                    "domain": self.__domain,
                     "temperature": temperature,
                     "max_tokens": max_tokens,
                 }
@@ -101,7 +106,6 @@ class SparkAPI:
             query: str,
             history: list = None,  # store the conversation history
             user_id: str = "001",
-            domain: str = "general",
             max_tokens: int = 2048,
             temperature: float = 0.5,
     ):
@@ -116,7 +120,6 @@ class SparkAPI:
         input_str = self.__build_inputs(
             message=message,
             user_id=user_id,
-            domain=domain,
             temperature=temperature,
             max_tokens=max_tokens,
         )
@@ -145,7 +148,6 @@ class SparkAPI:
             query: str,
             history: list = None,  # store the conversation history
             user_id: str = "001",
-            domain: str = "general",
             max_tokens: int = 2048,
             temperature: float = 0.5,
     ):
@@ -161,7 +163,6 @@ class SparkAPI:
         input_str = self.__build_inputs(
             message=message,
             user_id=user_id,
-            domain=domain,
             temperature=temperature,
             max_tokens=max_tokens,
         )

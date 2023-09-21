@@ -1,5 +1,4 @@
 setuptools==68.0.0
-websocket~=0.2.1
-websocket-client==1.6.1
+websocket-client==1.6.3
 requests==2.31.0
 pyhandytools==0.0.4

@@ -23,7 +23,7 @@ if __name__ == '__main__':
     # print(sparkWeb.chat("repeat: hello world"))
 
     # stream input chat
-    #sparkWeb.chat_stream(history=True)
+    # sparkWeb.chat_stream(history=True)
 
     # continue chat
     chat = sparkWeb.create_continuous_chat()

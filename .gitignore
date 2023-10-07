@@ -2,4 +2,4 @@
 sparkdesk_web/log
 dist
 build
-conf/*
+conf/keys.json

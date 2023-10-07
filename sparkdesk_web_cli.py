@@ -22,5 +22,10 @@ if __name__ == '__main__':
     # single chat
     # print(sparkWeb.chat("repeat: hello world"))
 
+    # stream input chat
+    #sparkWeb.chat_stream(history=True)
+
     # continue chat
-    sparkWeb.chat_stream(history=True)
+    chat = sparkWeb.create_continuous_chat()
+    print(chat.chat("请介绍一下西安"))
+    print(chat.chat("刚才你说的是哪个城市？"))

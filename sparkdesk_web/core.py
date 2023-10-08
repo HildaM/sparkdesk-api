@@ -134,11 +134,11 @@ class SparkWeb:
         print("\n")
         return response_text, True
 
-    def chat_stream(self, history: bool = False, history_path: str = './data/'):
+    def chat_stream(self, history: bool = False, history_path: str = './history/'):
         history_file_path = ''
         if history:
             FileUtils.check_dir_path(history_path)
-            history_file_path = os.path.join(history_path, f'history_{str(datetime.now())}.json')
+            history_file_path = os.path.join(history_path, f'history_{str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))}.json')
         try:
             self.__create_chat(NEW_CHAT)
             print("Enter exit or stop to end the conversation.\n")

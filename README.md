@@ -2,11 +2,11 @@
 > 如果该项目对你有帮助，不要忘记给我点个 star 哦！
 ## 使用方法
 ```shell
-pip install sparkdesk-api==1.2.0
+pip install sparkdesk-api==1.3.0
 ```
 或者
 ```shell
-pip install sparkdesk-api==1.2.0 -i https://pypi.org/simple
+pip install sparkdesk-api==1.3.0 -i https://pypi.org/simple
 ```
 
 ### 1. Web模式

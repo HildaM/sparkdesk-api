@@ -67,13 +67,31 @@ class SparkWeb:
         self.__chat_id = self.__generate_chat_id()
         self.__set_name(chat_name)
 
+    # 获取最近一次的sid用于延续对话，否则对话无记忆
+    def __get_chat_sid(self) -> str:
+        try:
+            response = self.__get_chat_history()
+            data = json.loads(response.text)
+            return data['data'][-1]["historyList"][-1]["sid"]
+        except:
+            return ''
+
+    def __get_chat_history(self):
+
+        url = f'https://xinghuo.xfyun.cn/iflygpt/u/chat_history/all/{self.__chat_id}'
+        response = requests.request("GET", url, headers=self.__request_header)
+        return response
+
     def __get_resp(self, question):
+
+        sid = self.__get_chat_sid()
         url = "https://xinghuo.xfyun.cn/iflygpt-chat/u/chat_message/chat"
         payload = {
             'fd': self.__fd,
             'chatId': self.__chat_id,
             'text': question,
             'GtToken': self.__GtToken,
+            'sid': sid,
             'clientType': '1'
         }
         response = requests.request("POST", url, headers=self.__cha_header, data=payload, stream=True)
@@ -144,3 +162,34 @@ class SparkWeb:
             if history:
                 FileUtils.write2json(history_file_path, self.__chat_history)
             print("\nThank you for using the SparkDesk AI. Welcome to use it again!")
+
+    # 提供连续对话
+    def create_continuous_chat(self):
+        # 生成器包装，提供预激服务
+        class ContextGenWrapper:
+            def __init__(self, spark, gen):
+                self._gen = gen
+                self._spark = spark
+                # 第一次构建生成器 进行预激
+                next(gen)
+
+            def chat(self, question):
+                result = self._gen.send(question)
+                # 将生成器执行到接受question的位置
+                self._gen.send(None)
+                return result
+
+        return ContextGenWrapper(self, self.continuous_chat_gen())
+
+    # 连续对话生成器
+    def continuous_chat_gen(self):
+        self.__create_chat(NEW_CHAT)
+        count = 0
+        while True:
+            count += 1
+            question = yield
+            resp = self.__streaming_output(question)
+            # If False, regenerate the chat
+            if resp[1] is False:
+                print("WARNING: 可能触发敏感词监控，对话已被重置，请前往Web页面更新Cookie、fd、GtToken！")
+            yield resp[0]

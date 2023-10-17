@@ -133,6 +133,8 @@ class SparkAPI:
                 doc url: https://www.xfyun.cn/doc/spark/Web.html#_1-%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E
                 """
                 if len(response) == 0 or status == 2:
+                    if not response and history and history[-1]["role"] == "assistant":
+                        response = history[-1]["content"]
                     break
                 response_str = ws.recv()
             return response

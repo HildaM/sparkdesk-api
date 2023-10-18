@@ -1,12 +1,12 @@
 # sparkdesk-api 讯飞星火大模型api
-> 如果该项目对你有帮助，不要忘记给我点个 star 哦！
+> 如果该项目对你有帮助，不要忘记给我点个 star，或者 [赞助](https://github.com/HildaM/sparkdesk-api#sparkdesk-api-%E8%AE%AF%E9%A3%9E%E6%98%9F%E7%81%AB%E5%A4%A7%E6%A8%A1%E5%9E%8Bapi) 我一杯蜜雪冰城喔~
 ## 使用方法
 ```shell
-pip install sparkdesk-api==1.3.0
+pip install sparkdesk-api==1.4.0
 ```
 或者
 ```shell
-pip install sparkdesk-api==1.3.0 -i https://pypi.org/simple
+pip install sparkdesk-api==1.4.0 -i https://pypi.org/simple
 ```
 
 ### 1. Web模式
@@ -57,6 +57,12 @@ sparkAPI.chat_stream()
 ```
 
 具体调用方法与相关调用函数与 Web 模式一致。
+
+# 🙏 赞助
+如果项目对您有帮助，可以赞助我一杯蜜雪冰城哦~
+<div>
+  <img src="docs/赞助.jpg" style="width: 500px;">
+</div>
 
 # 🤝贡献
 

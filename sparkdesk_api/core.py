@@ -198,5 +198,8 @@ class SparkAPI:
                 for response, _ in self.__streaming_output(query, history):
                     print("\r" + response, end="")
                 print("\n")
+        except BaseException as e:
+            if isinstance(e, KeyboardInterrupt):
+                print(e)
         finally:
             print("\nThank you for using the SparkDesk AI. Welcome to use it again!")

@@ -13,27 +13,35 @@ import json
 from datetime import datetime, timezone
 from urllib.parse import urlencode, urlparse
 from websocket import create_connection, WebSocketConnectionClosedException
-from sparkdesk_api.utils import get_prompt, process_response
+from sparkdesk_api.utils import get_prompt, process_response, is_support_version
 
 
 class SparkAPI:
-    __api_url = 'wss://spark-api.xf-yun.com/v1.1/chat'  # 默认为1.1版本
-    __domain = 'general'
+    __api_url = 'wss://spark-api.xf-yun.com/v3.1/chat'  # 默认为3.0版本
+    __domain = 'generalv3'
     __max_token = 2048
 
-    def __init__(self, app_id, api_key, api_secret, version=1.1):
+    def __init__(self, app_id, api_key, api_secret, version=None):
         self.__app_id = app_id
         self.__api_key = api_key
         self.__api_secret = api_secret
+        # 配置版本
+        if version is not None and is_support_version(version):
+            self.__set_version(version)
 
+    def __set_version(self, version):
+        # 讯飞v1.0
+        if version == 1.1:
+            self.__api_url = 'wss://spark-api.xf-yun.com/v1.1/chat'
+            self.__domain = 'general'
         # 讯飞v2.0
-        if version == 2.1:
+        elif version == 2.1:
             self.__api_url = 'wss://spark-api.xf-yun.com/v2.1/chat'
             self.__domain = 'generalv2'
-        # 讯飞v3.0    
-        if version == 3.1:
-            self.__api_url = 'wss://spark-api.xf-yun.com/v3.1/chat'
-            self.__domain = 'generalv3'
+        elif version == 3.1:
+            # 默认版本
+            return
+
 
     def __set_max_tokens(self, token):
         if isinstance(token, int) is False or token < 0:

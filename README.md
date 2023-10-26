@@ -2,11 +2,11 @@
 > 如果该项目对你有帮助，不要忘记给我点个 star，或者 [赞助](https://github.com/HildaM/sparkdesk-api#-%E8%B5%9E%E5%8A%A9) 我一杯蜜雪冰城喔~
 ## 使用方法
 ```shell
-pip install sparkdesk-api==1.4.0
+pip install sparkdesk-api==1.5.0
 ```
 或者
 ```shell
-pip install sparkdesk-api==1.4.0 -i https://pypi.org/simple
+pip install sparkdesk-api==1.5.0 -i https://pypi.org/simple
 ```
 
 ### 1. Web模式
@@ -37,7 +37,8 @@ sparkWeb = SparkWeb(
 ```
 
 ### 2. API模式
-支持v2.0和v1.5两种接口！
+支持v3.0、v2.0、v1.0 三个版本，默认接口版本为3.0
+- 默认api接口版本为3.1，配置其他版本需要指定Version参数（2.1或者1.1）
 
 讯飞星火的API需要前往官网进行申请。
 你可以先创建一个服务，然后在该服务的控制台页面左边的：“星火认知大模型”栏目，进入“合作咨询”页面进行申请。
@@ -46,7 +47,7 @@ sparkWeb = SparkWeb(
 该模式需要 3 个参数：app_id、api_key、api_secret
 ```python
 from sparkdesk_api.core import SparkAPI
-# 默认api接口版本为1.5，开启v2.0版本只需指定 version=2.1 即可
+# 默认api接口版本为3.1，配置其他版本需要指定Version参数（2.1或者1.1）
 sparkAPI = SparkAPI(
     app_id=app_id,
     api_secret=api_secret,

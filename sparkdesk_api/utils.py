@@ -9,6 +9,8 @@
 """
 import json
 
+VERSIONS = {1.1, 2.1, 3.1}
+
 
 def get_prompt(query: str, history: list):
     use_message = {"role": "user", "content": query}
@@ -19,7 +21,6 @@ def get_prompt(query: str, history: list):
     return message
 
 
-
 """
 param reference:
     status:
@@ -27,6 +28,8 @@ param reference:
         0 represents the first text result, 1 represents intermediate text results, and 2 represents the last text result.
 
 """
+
+
 def process_response(response_str: str, history: list):
     res_dict: dict = json.loads(response_str)
     code = res_dict.get("header", {}).get("code")
@@ -56,3 +59,18 @@ def process_response(response_str: str, history: list):
         print("you can see this website to know code detail")
         print("https://www.xfyun.cn/doc/spark/%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E.html")
         return "", history, status
+
+
+# 小数判断
+def is_decimal(n):
+    if isinstance(n, float):
+        return n % 1 != 0  # 3.1 % 1 = 0.1
+    else:
+        return False
+
+
+# 版本控制
+def is_support_version(version):
+    if version in VERSIONS and is_decimal(version):
+        return True
+    raise RuntimeError("Sparkdesk Version 只支持1.1、2.1、3.1，请输入正确的Version")

@@ -19,7 +19,7 @@ if __name__ == '__main__':
         app_id=app_id,
         api_secret=api_secret,
         api_key=api_key,
-        version=2.1
+        # version=2.1
     )
 
     # single chat

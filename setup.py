@@ -5,7 +5,7 @@ with open("README.md", "r", encoding='utf-8') as fh:
 
 setuptools.setup(
       name="sparkdesk-api",
-      version="1.4.0",
+      version="1.5.0",
       author="HildaM",
       author_email="Hilda_quan@163.com",
       description="sparkdesk-api 讯飞星火大模型api",

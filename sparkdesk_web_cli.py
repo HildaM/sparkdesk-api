@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     # continue chat
     chat = sparkWeb.create_continuous_chat()
-    # while True:
-    #     print(chat.chat(input("Ask: ")))
-    print(chat.chat("肇庆是一个什么样的城市"))
-    print(chat.chat("刚才你说的是哪个城市？"))
+    while True:
+        chat.chat(input("Ask: "))
+    # chat.chat("肇庆是一个什么样的城市")
+    # chat.chat("刚才你说的是哪个城市？")

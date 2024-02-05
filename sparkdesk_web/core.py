@@ -113,6 +113,8 @@ class SparkWeb:
                     answer = decode(encoded_data).replace('\n\n', '\n')
                     response_text += answer
 
+        if len(response_text.strip()) == 0:
+            print("WARNING: 可能触发敏感词监控，对话已被重置，请前往Web页面更新Cookie、fd、GtToken！")
         return response_text
 
     def __streaming_output(self, question):
@@ -129,7 +131,7 @@ class SparkWeb:
                     answer = decode(encoded_data).replace('\n\n', '\n')
                     response_text += answer
                     print(answer, end="")
-        if response_text is None:
+        if len(response_text.strip()) == 0:
             return '', False
         print("\n")
         return response_text, True

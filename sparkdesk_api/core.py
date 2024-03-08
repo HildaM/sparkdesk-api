@@ -9,7 +9,7 @@
 """
 import base64
 import hmac
-import json
+import json, logging
 from datetime import datetime, timezone
 from urllib.parse import urlencode, urlparse
 from websocket import create_connection, WebSocketConnectionClosedException
@@ -17,17 +17,22 @@ from sparkdesk_api.utils import get_prompt, process_response, is_support_version
 
 
 class SparkAPI:
-    __api_url = 'wss://spark-api.xf-yun.com/v3.5/chat'  # 默认版本
+    __api_url = 'wss://spark-api.xf-yun.com/v3.5/chat'  # 默认为3.0版本
     __domain = 'generalv3.5'
     __max_token = 2048
 
-    def __init__(self, app_id, api_key, api_secret, version=None):
+    def __init__(self, app_id, api_key, api_secret, version=None, assistant_id=None):
         self.__app_id = app_id
         self.__api_key = api_key
         self.__api_secret = api_secret
         # 配置版本
         if version is not None and is_support_version(version):
             self.__set_version(version)
+
+        # 助手API
+        if assistant_id is not None:
+            self.__api_url = f'wss://spark-openapi.cn-huabei-1.xf-yun.com/v1/assistants/{assistant_id}'
+            self.__domain = 'general'
 
     def __set_version(self, version):
         # 讯飞v1.0

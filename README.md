@@ -37,7 +37,7 @@ sparkWeb = SparkWeb(
 ```
 
 ### 2. API模式
-支持v3.5、v3.0、v2.0、v1.0 三个版本，默认接口版本为3.0
+支持v3.5、v3.0、v2.0、v1.0 四个版本 以及 [助手API](https://xinghuo.xfyun.cn/botcenter/createbot)，默认接口版本为3.5
 - 默认api接口版本为3.5，配置其他版本需要指定Version参数（3.1或者2.1或者1.1）
 
 讯飞星火的API需要前往官网进行申请。
@@ -52,7 +52,8 @@ sparkAPI = SparkAPI(
     app_id=app_id,
     api_secret=api_secret,
     api_key=api_key,
-    # version=2.1
+    # version=2.1,
+    # assistant_id="xyzspsb4i5s7_v1"
 )
 sparkAPI.chat_stream()
 ```

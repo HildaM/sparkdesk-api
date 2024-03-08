@@ -17,8 +17,8 @@ from sparkdesk_api.utils import get_prompt, process_response, is_support_version
 
 
 class SparkAPI:
-    __api_url = 'wss://spark-api.xf-yun.com/v3.1/chat'  # 默认为3.0版本
-    __domain = 'generalv3'
+    __api_url = 'wss://spark-api.xf-yun.com/v3.5/chat'  # 默认版本
+    __domain = 'generalv3.5'
     __max_token = 2048
 
     def __init__(self, app_id, api_key, api_secret, version=None):
@@ -39,7 +39,9 @@ class SparkAPI:
             self.__api_url = 'wss://spark-api.xf-yun.com/v2.1/chat'
             self.__domain = 'generalv2'
         elif version == 3.1:
-            # 默认版本
+            self.__api_url = 'wss://spark-api.xf-yun.com/v3.1/chat'
+            self.__domain = 'generalv3'
+        elif version == 3.5:
             return
 
 

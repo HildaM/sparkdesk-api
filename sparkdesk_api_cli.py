@@ -20,6 +20,7 @@ if __name__ == '__main__':
         api_secret=api_secret,
         api_key=api_key,
         # version=2.1
+        # assistant_id="xyzspsb4i5s7_v1"
     )
 
     # single chat

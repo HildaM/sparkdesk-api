@@ -2,11 +2,11 @@
 > 如果该项目对你有帮助，不要忘记给我点个 star，或者 [赞助](https://github.com/HildaM/sparkdesk-api#-%E8%B5%9E%E5%8A%A9) 我一杯蜜雪冰城喔~
 ## 使用方法
 ```shell
-pip install sparkdesk-api==1.5.0
+pip install sparkdesk-api==1.6.0
 ```
 或者
 ```shell
-pip install sparkdesk-api==1.5.0 -i https://pypi.org/simple
+pip install sparkdesk-api==1.6.0 -i https://pypi.org/simple
 ```
 
 ### 1. Web模式

@@ -9,7 +9,7 @@
 """
 import json
 
-VERSIONS = {1.1, 2.1, 3.1, 3.5}
+VERSIONS = {1.1, 2.1, 3.1, 3.2, 3.5, 4.0}
 
 
 def get_prompt(query: str, history: list):
@@ -73,4 +73,4 @@ def is_decimal(n):
 def is_support_version(version):
     if version in VERSIONS and is_decimal(version):
         return True
-    raise RuntimeError("Sparkdesk Version 只支持1.1、2.1、3.1、3.5，请输入正确的Version")
+    raise RuntimeError("Sparkdesk Version 只支持1.1、2.1、3.1、3.2、3.5、4.0，请输入正确的Version")

@@ -2,11 +2,11 @@
 > 如果该项目对你有帮助，不要忘记给我点个 star，或者 [赞助](https://github.com/HildaM/sparkdesk-api#-%E8%B5%9E%E5%8A%A9) 我一杯蜜雪冰城喔~
 ## 使用方法
 ```shell
-pip install sparkdesk-api==1.6.0
+pip install sparkdesk-api==1.6.1
 ```
 或者
 ```shell
-pip install sparkdesk-api==1.6.0 -i https://pypi.org/simple
+pip install sparkdesk-api==1.6.1 -i https://pypi.org/simple
 ```
 
 ### 1. Web模式
@@ -37,7 +37,7 @@ sparkWeb = SparkWeb(
 ```
 
 ### 2. API模式
-支持v3.5、v3.0、v2.0、v1.0 四个版本 以及 [助手API](https://xinghuo.xfyun.cn/botcenter/createbot)，默认接口版本为3.5
+支持v4.0、v3.5、v3.0、v2.0、v1.0 四个版本 以及 [助手API](https://xinghuo.xfyun.cn/botcenter/createbot)，默认接口版本为3.5
 - 默认api接口版本为3.5，配置其他版本需要指定Version参数（3.1或者2.1或者1.1）
 
 讯飞星火的API需要前往官网进行申请。

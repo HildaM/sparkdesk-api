@@ -48,7 +48,12 @@ class SparkAPI:
             self.__domain = 'generalv3'
         elif version == 3.5:
             return
-
+        elif version == 3.2:
+            self.__api_url = 'wss://spark-api.xf-yun.com/chat/pro-128k'
+            self.__domain = 'pro-128k'    
+        elif version == 4.0:
+            self.__api_url = 'wss://spark-api.xf-yun.com/v4.0/chat'
+            self.__domain = '4.0Ultra'
 
     def __set_max_tokens(self, token):
         if isinstance(token, int) is False or token < 0:
